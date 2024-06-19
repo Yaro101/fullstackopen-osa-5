@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
+import Notification from "./components/Notification";
 import "../index.css";
 
 const App = () => {
@@ -9,7 +10,10 @@ const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [newNotification, setNewNotification] = useState({
+    message: null,
+    type: "",
+  });
   const [newBlog, setNewBlog] = useState({ title: "", author: "", url: "" });
 
   useEffect(() => {
@@ -17,9 +21,9 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    const loggedUserJASON = window.localStorage.getItem("loggedBlogAppUser");
-    if (loggedUserJASON) {
-      const user = JSON.parse(loggedUserJASON);
+    const loggedUserJSON = window.localStorage.getItem("loggedBlogAppUser");
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON);
       setUser(user);
       blogService.setToken(user.token);
     }
@@ -39,11 +43,18 @@ const App = () => {
       setUser(user);
       setUsername("");
       setPassword("");
-    } catch (exception) {
-      setErrorMessage("Wrong credentials");
+      setNewNotification({ message: "Login successful", type: "success" });
       setTimeout(() => {
-        setErrorMessage(null);
-      }, 5000);
+        setNewNotification({ message: null, type: "" });
+      }, 4000);
+    } catch (exception) {
+      setNewNotification({
+        message: "wrong username or password",
+        type: "error",
+      });
+      setTimeout(() => {
+        setNewNotification({ message: null, type: "" });
+      }, 4000);
     }
   };
 
@@ -51,6 +62,10 @@ const App = () => {
     window.localStorage.removeItem("loggedBlogAppUser");
     setUser(null);
     blogService.setToken(null);
+    setNewNotification({ message: "Logged out", type: "success" });
+    setTimeout(() => {
+      setNewNotification({ message: null, type: "" });
+    }, 4000);
   };
 
   const handleCreateBlog = async (event) => {
@@ -60,11 +75,21 @@ const App = () => {
       const newBlogObject = await blogService.create(newBlog);
       setBlogs(blogs.concat(newBlogObject));
       setNewBlog({ title: "", author: "", url: "" });
-    } catch (exception) {
-      setErrorMessage("Failed to create a new blog");
+      setNewNotification({
+        message: `A new blog '${newBlogObject.title}' by ${newBlogObject.author} added`,
+        type: "success",
+      });
       setTimeout(() => {
-        setErrorMessage(null);
+        setNewNotification({ message: null, type: "" });
       }, 5000);
+    } catch (exception) {
+      setNewNotification({
+        message: "Failed to create a new blog",
+        type: "error",
+      });
+      setTimeout(() => {
+        setNewNotification({ message: null, type: "" });
+      }, 4000);
     }
   };
 
@@ -153,7 +178,15 @@ const App = () => {
     </div>
   );
 
-  return <div>{user === null ? loginForm() : displayBlogs()}</div>;
+  return (
+    <div>
+      <Notification
+        message={newNotification.message}
+        type={newNotification.type}
+      />
+      {user === null ? loginForm() : displayBlogs()}
+    </div>
+  );
 };
 
 export default App;
