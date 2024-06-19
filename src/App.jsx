@@ -96,67 +96,6 @@ const App = () => {
     }
   };
 
-  // const loginForm = () => {
-  //   const hideWhenVisible = { display: loginVisible ? "none" : "" };
-  //   const showWhenVisible = { display: loginVisible ? "" : "none" };
-  //   return (
-  //     <div>
-  //       <div style={hideWhenVisible}>
-  //         <button onClick={() => setLoginVisible(true)}>Log in</button>
-  //       </div>
-  //       <div style={showWhenVisible}>
-  //         <LoginForm
-  //           username={username}
-  //           password={password}
-  //           handleUsernameChange={({ target }) => setUsername(target.value)}
-  //           handlePasswordChange={({ target }) => setPassword(target.value)}
-  //           handleSubmit={handleLogin}
-  //         />
-  //         <button onClick={() => setLoginVisible(false)}>cancel</button>
-  //       </div>
-  //     </div>
-  //   );
-  // };
-
-  // const blogForm = () => (
-  //   <form onSubmit={handleCreateBlog}>
-  //     <div>
-  //       Title
-  //       <input
-  //         type="text"
-  //         value={newBlog.title}
-  //         name="Title"
-  //         onChange={({ target }) =>
-  //           setNewBlog({ ...newBlog, title: target.value })
-  //         }
-  //       />
-  //     </div>
-  //     <div>
-  //       Author
-  //       <input
-  //         type="text"
-  //         value={newBlog.author}
-  //         name="Author"
-  //         onChange={({ target }) =>
-  //           setNewBlog({ ...newBlog, author: target.value })
-  //         }
-  //       />
-  //     </div>
-  //     <div>
-  //       Url
-  //       <input
-  //         type="text"
-  //         value={newBlog.url}
-  //         name="URL"
-  //         onChange={({ target }) =>
-  //           setNewBlog({ ...newBlog, url: target.value })
-  //         }
-  //       />
-  //     </div>
-  //     <button type="submit">create</button>
-  //   </form>
-  // );
-
   const displayBlogs = () => (
     <div>
       {user && (
