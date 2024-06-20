@@ -96,6 +96,12 @@ const App = () => {
     }
   };
 
+  const updateBlogLikes = (updatedBlog) => {
+    setBlogs(
+      blogs.map((blog) => (blog.id === updatedBlog.id ? updatedBlog : blog))
+    );
+  };
+
   const displayBlogs = () => (
     <div>
       {user && (
@@ -118,7 +124,7 @@ const App = () => {
       <div>
         <br />
         {blogs.map((blog) => (
-          <Blog key={blog.id} blog={blog} />
+          <Blog key={blog.id} blog={blog} updateBlogLikes={updateBlogLikes} />
         ))}
       </div>
     </div>
