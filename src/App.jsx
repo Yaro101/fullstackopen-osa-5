@@ -102,33 +102,36 @@ const App = () => {
     );
   };
 
-  const displayBlogs = () => (
-    <div>
-      {user && (
-        <p>
-          <em>
-            <b>{user.name}</b>
-          </em>{" "}
-          logged-in <button onClick={handleLogout}>logout</button>
-        </p>
-      )}
-      {user && (
-        <Togglable buttonLabel="new blog">
-          <BlogForm
-            onSubmit={handleCreateBlog}
-            newBlog={newBlog}
-            setNewBlog={setNewBlog}
-          />
-        </Togglable>
-      )}
+  const displayBlogs = () => {
+    const sortedBlogs = [...blogs].sort((a, b) => b.likes - a.likes);
+    return (
       <div>
-        <br />
-        {blogs.map((blog) => (
-          <Blog key={blog.id} blog={blog} updateBlogLikes={updateBlogLikes} />
-        ))}
+        {user && (
+          <p>
+            <em>
+              <b>{user.name}</b>
+            </em>{" "}
+            logged-in <button onClick={handleLogout}>logout</button>
+          </p>
+        )}
+        {user && (
+          <Togglable buttonLabel="new blog">
+            <BlogForm
+              onSubmit={handleCreateBlog}
+              newBlog={newBlog}
+              setNewBlog={setNewBlog}
+            />
+          </Togglable>
+        )}
+        <div>
+          <br />
+          {sortedBlogs.map((blog) => (
+            <Blog key={blog.id} blog={blog} updateBlogLikes={updateBlogLikes} />
+          ))}
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div>
