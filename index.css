@@ -2,3 +2,31 @@
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   /* font-size: 1em; */
 }
+
+h1 {
+  font-size: 3em;
+  line-height: 1.2em;
+  color: #106063c9;
+}
+
+button {
+  border-radius: 5px;
+  border: 1px solid transparent;
+  padding: 0 1.6em;
+  margin-top: 0.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  color: rgb(24, 44, 54);
+  background-color: #93c1ce6b;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
+button:hover {
+  background-color: #79eaee;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}

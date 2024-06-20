@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import blogService from "../services/blogs";
 
-const Blog = ({ blog, updateBlogLikes }) => {
+const Blog = ({ blog, updateBlogLikes, removeBlog }) => {
   const [visible, setVisible] = useState(false);
 
   const toggleVisibility = () => {
@@ -19,12 +19,26 @@ const Blog = ({ blog, updateBlogLikes }) => {
     }
   };
 
+  const handleRemove = async () => {
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
+      try {
+        await blogService.remove(blog.id);
+        removeBlog(blog.id);
+      } catch (exception) {
+        console.error("Error removing blog:", exception);
+      }
+    }
+  };
+
   const blogStyle = {
     padding: 10,
     border: "solid grey",
     borderWidth: 1,
     marginBottom: 5,
   };
+
+  const loggedUser = JSON.parse(localStorage.getItem("loggedBlogAppUser"))
+
   return (
     <div style={blogStyle}>
       <div>
@@ -38,6 +52,9 @@ const Blog = ({ blog, updateBlogLikes }) => {
             Likes {blog.likes} <button onClick={handleLike}>like</button>
           </div>
           <p>{blog.user.name}</p>
+          {blog.user.username === loggedUser.username && (
+            <button onClick={handleRemove}>remove</button>
+          )}
         </div>
       )}
     </div>
