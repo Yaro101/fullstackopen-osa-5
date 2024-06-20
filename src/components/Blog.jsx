@@ -12,6 +12,7 @@ const Blog = ({ blog, updateBlogLikes }) => {
     const updatedBlog = { ...blog, likes: blog.likes + 1 };
     try {
       const returnedBlog = await blogService.update(blog.id, updatedBlog);
+      returnedBlog.user = blog.user;
       updateBlogLikes(returnedBlog);
     } catch (exception) {
       console.error("error updating likes", exception);
