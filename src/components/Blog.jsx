@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import blogService from '../services/blogs';
+import React, { useState } from "react";
+import blogService from "../services/blogs";
 
 const Blog = ({ blog, updateBlogLikes, removeBlog }) => {
   const [visible, setVisible] = useState(false);
@@ -15,7 +15,7 @@ const Blog = ({ blog, updateBlogLikes, removeBlog }) => {
       returnedBlog.user = blog.user;
       updateBlogLikes(returnedBlog);
     } catch (exception) {
-      console.error('error updating likes', exception);
+      console.error("error updating likes", exception);
     }
   };
 
@@ -25,25 +25,25 @@ const Blog = ({ blog, updateBlogLikes, removeBlog }) => {
         await blogService.remove(blog.id);
         removeBlog(blog.id);
       } catch (exception) {
-        console.error('Error removing blog:', exception);
+        console.error("Error removing blog:", exception);
       }
     }
   };
 
   const blogStyle = {
     padding: 10,
-    border: 'solid grey',
+    border: "solid grey",
     borderWidth: 1,
     marginBottom: 5,
   };
 
-  const loggedUser = JSON.parse(localStorage.getItem('loggedBlogAppUser'));
+  const loggedUser = JSON.parse(localStorage.getItem("loggedBlogAppUser"));
 
   return (
-    <div style={blogStyle}>
+    <div className="blog" style={blogStyle}>
       <div>
-        {blog.title} {blog.author}{' '}
-        <button onClick={toggleVisibility}>{visible ? 'hide' : 'show'}</button>
+        {blog.title} {blog.author}{" "}
+        <button className="show-hide-btn" onClick={toggleVisibility}>{visible ? "hide" : "show"}</button>
       </div>
       {visible && (
         <div>
@@ -52,7 +52,7 @@ const Blog = ({ blog, updateBlogLikes, removeBlog }) => {
             Likes {blog.likes} <button onClick={handleLike}>like</button>
           </div>
           <p>{blog.user.name}</p>
-          {blog.user.username === loggedUser.username && (
+          {loggedUser && blog.user.username === loggedUser.username && (
             <button onClick={handleRemove}>remove</button>
           )}
         </div>
