@@ -1,11 +1,12 @@
-import React from 'react';
+import React from "react";
 
 const BlogForm = ({ onSubmit, newBlog, setNewBlog }) => {
   return (
-    <form onSubmit={onSubmit}>
+    <form id="blog-form" onSubmit={onSubmit}>
       <div>
-        Title
+        <label htmlFor="title">Title</label>
         <input
+          id="title"
           type="text"
           value={newBlog.title}
           name="Title"
@@ -15,8 +16,9 @@ const BlogForm = ({ onSubmit, newBlog, setNewBlog }) => {
         />
       </div>
       <div>
-        Author
+        <label htmlFor="author">Author</label>
         <input
+          id="author"
           type="text"
           value={newBlog.author}
           name="Author"
@@ -26,8 +28,9 @@ const BlogForm = ({ onSubmit, newBlog, setNewBlog }) => {
         />
       </div>
       <div>
-        Url
+        <label htmlFor="url">Url</label>
         <input
+          id="url"
           type="text"
           value={newBlog.url}
           name="URL"
