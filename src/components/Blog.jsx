@@ -13,6 +13,7 @@ const Blog = ({ blog, updateBlogLikes, removeBlog }) => {
     try {
       const returnedBlog = await blogService.update(blog.id, updatedBlog);
       returnedBlog.user = blog.user;
+      // console.log('Calling updateBlogLikes');
       updateBlogLikes(returnedBlog);
     } catch (exception) {
       console.error("error updating likes", exception);
@@ -49,7 +50,7 @@ const Blog = ({ blog, updateBlogLikes, removeBlog }) => {
         <div>
           <p>{blog.url}</p>
           <div>
-            Likes {blog.likes} <button onClick={handleLike}>like</button>
+            Likes {blog.likes} <button className="like-btn" onClick={handleLike}>like</button>
           </div>
           <p>{blog.user.name}</p>
           {loggedUser && blog.user.username === loggedUser.username && (
