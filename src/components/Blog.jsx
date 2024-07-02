@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import blogService from "../services/blogs";
+import React, { useState } from 'react';
+import blogService from '../services/blogs';
 
 const Blog = ({ blog, updateBlogLikes, removeBlog }) => {
   const [visible, setVisible] = useState(false);
@@ -16,7 +16,7 @@ const Blog = ({ blog, updateBlogLikes, removeBlog }) => {
       // console.log('Calling updateBlogLikes');
       updateBlogLikes(returnedBlog);
     } catch (exception) {
-      console.error("error updating likes", exception);
+      console.error('error updating likes', exception);
     }
   };
 
@@ -26,25 +26,25 @@ const Blog = ({ blog, updateBlogLikes, removeBlog }) => {
         await blogService.remove(blog.id);
         removeBlog(blog.id);
       } catch (exception) {
-        console.error("Error removing blog:", exception);
+        console.error('Error removing blog:', exception);
       }
     }
   };
 
   const blogStyle = {
     padding: 10,
-    border: "solid grey",
+    border: 'solid grey',
     borderWidth: 1,
     marginBottom: 5,
   };
 
-  const loggedUser = JSON.parse(localStorage.getItem("loggedBlogAppUser"));
+  const loggedUser = JSON.parse(localStorage.getItem('loggedBlogAppUser'));
 
   return (
     <div className="blog" style={blogStyle}>
       <div>
-        {blog.title} {blog.author}{" "}
-        <button className="show-hide-btn" onClick={toggleVisibility}>{visible ? "hide" : "show"}</button>
+        {blog.title} {blog.author}{' '}
+        <button className="show-hide-btn" onClick={toggleVisibility}>{visible ? 'hide' : 'show'}</button>
       </div>
       {visible && (
         <div>
