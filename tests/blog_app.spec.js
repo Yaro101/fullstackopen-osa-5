@@ -1,4 +1,5 @@
 const { test, describe, beforeEach, expect } = require('@playwright/test');
+const { loginWith } = require('./helper');
 
 describe('Blog app', () => {
     beforeEach(async ({ page, request }) => {
@@ -29,10 +30,7 @@ describe('Blog app', () => {
     // Test login
     describe('Login', () => {
         test('succeeds with correct credentials', async ({ page }) => {
-            await page.getByRole('button', { name: 'login' }).click();
-            await page.getByTestId('username').fill('mluukkai2');
-            await page.getByTestId('password').fill('salainen');
-            await page.getByRole('button', { name: 'login' }).click();
+            await loginWith(page, 'mluukkai2', 'salainen');
 
             // Check for successful login notification message
             const successDiv = await page.locator('.notification-message');
@@ -40,10 +38,7 @@ describe('Blog app', () => {
         });
 
         test('fails with wrong credentials', async ({ page }) => {
-            await page.getByRole('button', { name: 'login' }).click();
-            await page.getByTestId('username').fill('mluukkai');
-            await page.getByTestId('password').fill('salain');
-            await page.getByRole('button', { name: 'login' }).click();
+            await loginWith(page, 'mluukkai2', 'salinen');
 
             const errorDiv = await page.locator('.notification-message');
             await expect(errorDiv).toContainText('wrong username or password');
@@ -53,10 +48,7 @@ describe('Blog app', () => {
     describe('User logged in', () => {
         beforeEach(async ({ page }) => {
             // Log in before each test
-            await page.getByRole('button', { name: 'login' }).click();
-            await page.getByTestId('username').fill('mluukkai2');
-            await page.getByTestId('password').fill('salainen');
-            await page.getByRole('button', { name: 'login' }).click();
+            await loginWith(page, 'mluukkai2', 'salainen');
 
             // Check for successful user login
             const successDiv = await page.locator('.notification-message');
