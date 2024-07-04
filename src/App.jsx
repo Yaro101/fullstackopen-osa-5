@@ -77,6 +77,11 @@ const App = () => {
 
         try {
             const newBlogObject = await blogService.create(newBlog);
+            newBlogObject.user = {
+                username: user.username,
+                name: user.name,
+                id: user.id,
+            };
             setBlogs(blogs.concat(newBlogObject));
             setNewBlog({ title: '', author: '', url: '' });
             setNewNotification({
