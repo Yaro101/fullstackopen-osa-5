@@ -1,10 +1,11 @@
 const { test, describe, beforeEach, expect } = require('@playwright/test');
 const { loginWith } = require('./helper');
+const { afterEach } = require('node:test');
 
 describe('Blog app', () => {
     beforeEach(async ({ page, request }) => {
         // Reset the db
-        await request.post('http:localhost:3003/api/testing/reset');
+        await request.post('http://localhost:3003/api/testing/reset');
         // Create a user for the backend
         await request.post('http://localhost:3003/api/users', {
             data: {
@@ -65,5 +66,31 @@ describe('Blog app', () => {
             const newBlog = await page.getByText('New Blog Title via Test Blog Author via Test');
             await expect(newBlog).toBeVisible();
         });
+
+        test('a blog can be liked', async ({ page }) => {
+            await page.getByRole('button', { name: 'new blog' }).click();
+            await page.getByTestId('title').fill('Blog to test likes');
+            await page.getByTestId('author').fill('Blog Author via Test');
+            await page.getByTestId('url').fill('http://madebytest2bliked.fi');
+            await page.getByRole('button', { name: 'create' }).click();
+
+            const newBlog = await page.getByText('Blog to test likes Blog Author via Test');
+            await expect(newBlog).toBeVisible();
+
+            await page.locator('.show-hide-btn').click();
+
+            await page.locator('.like-btn').click();
+
+            const likeCount = await page.locator('.like-count');
+            await expect(likeCount).toContainText('1');
+        });
+
+        // afterEach(async ({ page }) => {
+        //     // Log out after each test
+        //     await page.getByRole('button', { name: 'logout' }).click();
+        //     const loginButton = await page.getByRole('button', { name: 'login' });
+        //     await expect(loginButton).toBeVisible();
+
+        // });
     });
 });
