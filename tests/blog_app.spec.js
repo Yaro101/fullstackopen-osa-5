@@ -149,5 +149,49 @@ describe('Blog app', () => {
             const removeBtn = await page.getByRole('button', { name: 'remove' });
             await expect(removeBtn).not.toBeVisible();
         });
+
+        test('user who created the blog see remove button', async ({ page }) => {
+            // Create blog
+            await page.getByRole('button', { name: 'new blog' }).click();
+            await page.getByTestId('title').fill('New blog for testing');
+            await page.getByTestId('author').fill('Tester');
+            await page.getByTestId('url').fill('http://blogtesting.fi');
+            await page.getByRole('button', { name: 'create' }).click();
+
+            const newBlog = await page.getByText('New blog for testing Tester');
+            await expect(newBlog).toBeVisible();
+
+            // Show the blog post details
+            await page.locator('.show-hide-btn').click();
+
+            // Check the existence of remove button
+            const removeBtn = await page.getByRole('button', { name: 'remove' });
+            await expect(removeBtn).toBeVisible();
+        });
+
+        test('user who did not create the blog cannot see remove button', async ({ page }) => {
+            // Create blog
+            await page.getByRole('button', { name: 'new blog' }).click();
+            await page.getByTestId('title').fill('New blog for testing');
+            await page.getByTestId('author').fill('Tester');
+            await page.getByTestId('url').fill('http://blogtesting.fi');
+            await page.getByRole('button', { name: 'create' }).click();
+
+            const newBlog = await page.getByText('New blog for testing Tester');
+            await expect(newBlog).toBeVisible();
+
+            // Log out
+            await page.getByRole('button', { name: 'logout' }).click();
+
+            // Log in as Arto Hellas
+            await loginWith(page, 'hellas', 'salainen2');
+
+            // Show the blog post details
+            await page.locator('.show-hide-btn').click();
+
+            // Try to delete the blog
+            const removeBtn = await page.getByRole('button', { name: 'remove' });
+            await expect(removeBtn).not.toBeVisible();
+        });
     });
 });
