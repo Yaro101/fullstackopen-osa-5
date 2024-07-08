@@ -193,5 +193,69 @@ describe('Blog app', () => {
             const removeBtn = await page.getByRole('button', { name: 'remove' });
             await expect(removeBtn).not.toBeVisible();
         });
+
+        test('blogs are ordered by likes (most likes first)', async ({ page }) => {
+            // Create multiple blogs with different like counts
+            const blogs = [
+                { title: 'Blog with 3 likes', author: 'Author A', url: 'http://test1.fi', likes: 3 },
+                { title: 'Blog with 10 likes', author: 'Author B', url: 'http://test10.fi', likes: 10 },
+                { title: 'Blog with 5 likes', author: 'Author C', url: 'http://test5.fi', likes: 5 },
+                { title: 'Blog with 12 likes', author: 'Author D', url: 'http://test12.fi', likes: 12 },
+            ];
+            // Creating the blogs
+            for (const blog of blogs) {
+                await page.getByRole('button', { name: 'new blog' }).click();
+                await page.getByTestId('title').fill(blog.title);
+                await page.getByTestId('author').fill(blog.author);
+                await page.getByTestId('url').fill(blog.url);
+                await page.getByRole('button', { name: 'create' }).click();
+
+                // Wait for blog to appear
+                await page.waitForSelector(`text=${blog.title} ${blog.author}`);
+
+                // Locate the new blog post detsils
+                const newBlog = page.locator(`.blog:has-text("${blog.title} ${blog.author}")`);
+                await expect(newBlog).toBeVisible();
+
+                // Show the blog details
+                const showButton = newBlog.locator('.show-hide-btn:has-text("show")');
+                await showButton.click();
+
+                // Locating the like button of the newBlog
+                let likeBtn = newBlog.locator('.like-btn:has-text("like")');
+                await likeBtn.waitFor({ state: 'visible' });
+
+                // Click the like button based on the number of likes
+                for (let i = 0; i < blog.likes; i++) {
+                    await likeBtn.click();
+                    // Adding a timeout to be sure the change is made
+                    await page.waitForTimeout(700);
+                    await newBlog.waitFor({ state: 'attached' });
+                    likeBtn = newBlog.locator('.like-btn:has-text("like")');
+                    await likeBtn.waitFor({ state: 'visible' });
+                }
+                // Hide the blog details
+                const HideButton = newBlog.locator('.show-hide-btn:has-text("hide")');
+                await HideButton.click();
+            }
+
+            // Refrech the page
+            await page.reload();
+
+            // Check the order of blogs based on most likes first
+            const blogElements = await page.locator('.blog');
+            const blogCount = await blogElements.count();
+            let previousLikes = Infinity; // Infinity as in highest number
+            for (let i = 0; i < blogCount; i++) {
+                const blogElement = blogElements.nth(i);
+                const likeCountElement = await blogElement.locator('.like-count');
+                const likeCountText = await likeCountElement.textContent();
+
+                const currentLikes = parseInt(likeCountText, 10);
+                // Verifying decending order
+                expect(currentLikes).toBeLessThanOrEqual(previousLikes);
+                previousLikes = currentLikes;
+            }
+        });
     });
 });
